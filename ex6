@@ -1,0 +1,69 @@
+class Survey:
+    def __init__(self, title, questions):
+        self.title = title
+        self.questions = questions
+        self.responses = []
+        self.feedback_list = []  # Store user feedback
+
+    def collect_response(self, answers, feedback):
+        if len(answers) == len(self.questions):
+            self.responses.append(answers)
+            self.feedback_list.append(feedback)
+        else:
+            print("Error: Number of answers doesn't match the number of questions.")
+
+    def analyze_results(self):
+        print(f"\nSurvey Results for: {self.title}")
+        for i, question in enumerate(self.questions):
+            print(f"\nQuestion {i + 1}: {question}")
+            answers = [response[i] for response in self.responses]
+            answer_counts = {answer: answers.count(answer) for answer in set(answers)}
+            for answer, count in answer_counts.items():
+                print(f" {answer}: {count} votes")
+
+        print("\nCollected Feedback:")
+        for i, feedback in enumerate(self.feedback_list):
+            print(f"Feedback from User {i + 1}: {feedback}")
+
+    def display_survey(self):
+        print(f"\nSurvey: {self.title}")
+        for i, question in enumerate(self.questions):
+            print(f"{i + 1}. {question}")
+
+
+class User:
+    def __init__(self, name):
+        self.name = name
+
+    def take_survey(self, survey):
+        print(f"\n{self.name}, please answer the following questions:")
+        answers = []
+        survey.display_survey()
+        for i, question in enumerate(survey.questions):
+            answer = input(f"Answer to question {i + 1}: ")
+            answers.append(answer)
+        feedback = input("Any additional feedback you’d like to share? ")
+        survey.collect_response(answers, feedback)
+        print(f"\n{self.name}'s response and feedback have been recorded.")
+
+
+# Get survey details from user input
+title = input("Enter the survey title: ")
+num_questions = int(input("Enter the number of questions: "))
+questions = []
+for i in range(num_questions):
+    question = input(f"Enter question {i + 1}: ")
+    questions.append(question)
+
+# Create the survey
+survey = Survey(title, questions)
+
+# Get user details and have them take the survey
+num_users = int(input("Enter the number of users: "))
+for i in range(num_users):
+    user_name = input(f"Enter the name of user {i + 1}: ")
+    user = User(user_name)
+    user.take_survey(survey)
+
+# Analyze and display the results
+survey.analyze_results()
